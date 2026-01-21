@@ -63,6 +63,12 @@ public class PlayerController : MonoBehaviour
     }
     void OnDash()
     {
-                rb.AddForce(new Vector2(movementX * 7500, movementY*500));
+        if (isGrounded)
+        {
+            rb.AddForce(new Vector2(movementX * 7000, movementY+200));
+        }
+        else {
+            rb.AddForce(new Vector2(movementX * 7000, 0));
+        }
     }
 }
