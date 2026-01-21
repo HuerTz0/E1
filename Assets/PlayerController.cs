@@ -61,4 +61,8 @@ public class PlayerController : MonoBehaviour
             Debug.Log("Score: " + score);
         }
     }
+    void OnDash()
+    {
+                rb.AddForce(new Vector2(movementX * 7500, movementY*500));
+    }
 }
