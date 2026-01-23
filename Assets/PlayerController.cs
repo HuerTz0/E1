@@ -11,11 +11,17 @@ public class PlayerController : MonoBehaviour
     bool isGrounded;
     int score = 0;
 
+    Animator animator;
+    SpriteRenderer spriteRenderer;
+
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
@@ -31,6 +37,27 @@ public class PlayerController : MonoBehaviour
         {
             rb.AddForce(new Vector2(0, 100));
         }
+        if(!Mathf.Approximately(movementX,0f))
+        {
+            animator.SetBool("isRunning", true);
+           spriteRenderer.flipX = movementX < 0;
+        }
+        else
+        {
+            animator.SetBool("isRunning", false);
+        }
+
+        if(!Mathf.Approximately(rb.linearVelocity.y,0f))
+        {
+            animator.SetBool("isGrounded", false);
+        }
+        else
+        {
+            animator.SetBool("isGrounded", true);
+        }
+
+
+
     }
     void OnMove(InputValue value)
     {
@@ -65,9 +92,10 @@ public class PlayerController : MonoBehaviour
     {
         if (isGrounded)
         {
-            rb.AddForce(new Vector2(movementX * 7000, movementY+200));
+            rb.AddForce(new Vector2(movementX * 7000, movementY + 200));
         }
-        else {
+        else
+        {
             rb.AddForce(new Vector2(movementX * 7000, 0));
         }
     }
