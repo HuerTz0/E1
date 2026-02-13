@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-
+using UnityEngine.Events;
 public class PlayerController : MonoBehaviour
 {
 
@@ -16,6 +16,8 @@ public class PlayerController : MonoBehaviour
     SpriteRenderer spriteRenderer;
     [SerializeField] AudioSource source;
     [SerializeField] AudioClip jumpClip;
+    
+    public UnityEvent playerDeath;
 
 
 
@@ -90,6 +92,10 @@ public class PlayerController : MonoBehaviour
             score++;
             other.gameObject.SetActive(false);
             gm.UpdateScore(score);
+        }
+        else if(other.gameObject.CompareTag("Spike"))
+        {
+            playerDeath.Invoke();
         }
     }
     void OnDash()
