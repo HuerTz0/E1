@@ -16,7 +16,8 @@ public class PlayerController : MonoBehaviour
     SpriteRenderer spriteRenderer;
     [SerializeField] AudioSource source;
     [SerializeField] AudioClip jumpClip;
-    
+    [SerializeField] Transform groundCheck;
+
     public UnityEvent playerDeath;
 
 
@@ -37,7 +38,7 @@ public class PlayerController : MonoBehaviour
         transform.position = new Vector2(transform.position.x + movementDistanceX, transform.position.y + movementDistanceY);
         */
         rb.linearVelocity = new Vector2(movementX * speed, rb.linearVelocity.y);
-
+       isGrounded = CheckisGrounded();
         if (movementY > 0 && isGrounded)
         {
             rb.AddForce(new Vector2(0, 100));
@@ -71,20 +72,20 @@ public class PlayerController : MonoBehaviour
         movementX = v.x;
         movementY = v.y;
     }
-    void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            isGrounded = true;
-        }
-    }
-    void OnCollisionExit2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            isGrounded = false;
-        }
-    }
+    //void OnCollisionEnter2D(Collision2D collision)
+    //{
+    //    if (collision.gameObject.CompareTag("Ground"))
+    //    {
+    //        isGrounded = true;
+    //    }
+    //}
+    //void OnCollisionExit2D(Collision2D collision)
+    //{
+    //    if (collision.gameObject.CompareTag("Ground"))
+    //    {
+    //        isGrounded = false;
+    //    }
+    //}
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.CompareTag("Collectable"))
@@ -107,6 +108,21 @@ public class PlayerController : MonoBehaviour
         else
         {
             rb.AddForce(new Vector2(movementX * 7000, 0));
+        }
+    }
+    bool CheckisGrounded()
+    {
+        float rayCastDistance = 0.5f;
+        int layerMask = 1 << 3;
+        RaycastHit2D hit = Physics2D.Raycast(groundCheck.position, Vector2.down, rayCastDistance, layerMask);
+        return hit.collider != null;
+    }
+    void OnJump()
+    {
+               if (isGrounded)
+        {
+            rb.AddForce(new Vector2(0, 200));
+            source.PlayOneShot(jumpClip);
         }
     }
 }
